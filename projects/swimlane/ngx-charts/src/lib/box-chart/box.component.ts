@@ -14,7 +14,7 @@ import { select, BaseType } from 'd3-selection';
 import { interpolate } from 'd3-interpolate';
 import { easeSinInOut } from 'd3-ease';
 
-import cloneDeep from 'clone-deep';
+// import cloneDeep from 'clone-deep';
 
 import { roundedRect } from '../common/shape.helper';
 import { id } from '../utils/id';
@@ -279,7 +279,9 @@ export class BoxComponent implements OnChanges {
       return [...this.lineCoordinates];
     }
 
-    const lineCoordinates: LineCoordinates = cloneDeep(this.lineCoordinates);
+    // const lineCoordinates: LineCoordinates = cloneDeep(this.lineCoordinates);
+    const lineCoordinates: LineCoordinates = BoxComponent.deepCopy<LineCoordinates>(this.lineCoordinates);
+    
 
     lineCoordinates[1].v1.y = lineCoordinates[1].v2.y = lineCoordinates[3].v1.y = lineCoordinates[3].v2.y = lineCoordinates[0].v1.y = lineCoordinates[0].v2.y =
       lineCoordinates[2].v1.y;
@@ -340,5 +342,19 @@ export class BoxComponent implements OnChanges {
 
   private checkToHideBar(): void {
     this.hideBar = this.noBarWhenZero && this.height === 0;
+  }
+
+  private static deepCopy<T>(source: T): T {
+    return Array.isArray(source)
+    ? source.map(item => this.deepCopy(item))
+    : source instanceof Date
+    ? new Date(source.getTime())
+    : source && typeof source === 'object'
+          ? Object.getOwnPropertyNames(source).reduce((o, prop) => {
+             Object.defineProperty(o, prop, Object.getOwnPropertyDescriptor(source, prop)!);
+             o[prop] = this.deepCopy((source as { [key: string]: any })[prop]);
+             return o;
+          }, Object.create(Object.getPrototypeOf(source)))
+    : source as T;
   }
 }

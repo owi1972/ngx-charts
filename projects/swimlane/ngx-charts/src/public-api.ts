@@ -117,7 +117,7 @@ export * from './lib/pie-chart/advanced-pie-chart.component';
 export * from './lib/pie-chart/pie-chart.component';
 export * from './lib/pie-chart/pie-arc.component';
 export * from './lib/pie-chart/pie-grid.component';
-export * from './lib/pie-chart/pie-grid-series.component';
+
 export * from './lib/pie-chart/pie-series.component';
 export * from './lib/pie-chart/pie-label.component';
 
